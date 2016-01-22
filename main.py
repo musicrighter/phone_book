@@ -63,14 +63,14 @@ def index():
   return flask.render_template('index.html')
 
 
-@app.route("/create")
-def create():
+@app.route("/create_contact")
+def create_contact():
     app.logger.debug("Create")
     return flask.render_template('create.html')
 
 
-@app.route("/_add_memo")
-def add_memo():
+@app.route("/_add_contact")
+def add_contact():
     first_name = request.args.get('first_name', 0, type=str)
     last_name = request.args.get('last_name', 0, type=str)
     phone = request.args.get('phone', 0, type=str)
@@ -85,8 +85,8 @@ def add_memo():
     return flask.redirect(url_for('index'))
 
 
-@app.route("/_del_memo")
-def del_memo():
+@app.route("/_del_entry")
+def del_entry():
     memo_id = request.args.get('_id', 0, type=str)
     collection.remove({'_id': ObjectId(memo_id)})
     return flask.redirect(url_for('index'))
@@ -110,7 +110,7 @@ def get_contacts():
     can be inserted directly in the 'session' object.
     """
     records = [ ]
-    for record in collection.find( { "type": "dated_memo" } ).sort("date", 1):
+    for record in collection.find( { "type": "contacts" } ).sort("date", 1):
         record['date'] = arrow.get(record['date']).isoformat()
         record["_id"] = str(record["_id"])
         records.append(record)
@@ -122,8 +122,7 @@ def get_books():
     can be inserted directly in the 'session' object.
     """
     records = [ ]
-    for record in collection.find( { "type": "dated_memo" } ).sort("date", 1):
-        record['date'] = arrow.get(record['date']).isoformat()
+    for record in collection.find( { "type": "dated_memo" } ).sort():
         record["_id"] = str(record["_id"])
         records.append(record)
     return records 
