@@ -41,7 +41,6 @@ app = flask.Flask(__name__)
 try: 
     dbclient = MongoClient(CONFIG.MONGO_URL)
     db = dbclient.AddressBook
-    collection = db.addressbook
 except:
     print("Failure opening database.  Is Mongo running? Correct password?")
     sys.exit(1)
@@ -58,8 +57,6 @@ app.secret_key = str(uuid.uuid4())
 def index():
   app.logger.debug("Main page entry")
   flask.session['books'] = get_books()
-  for memo in flask.session['books']:
-      app.logger.debug("Book: " + str(memo))
   return flask.render_template('index.html')
 
 
@@ -67,6 +64,16 @@ def index():
 def create_contact():
     app.logger.debug("Create")
     return flask.render_template('create.html')
+
+
+@app.route("/_add_book")
+def add_book():
+    book_name = request.args.get('book_name', 0, type=str)
+    
+    db[book_name].insert({"a" : "a"})
+
+
+    return flask.render_template('index.html')
 
 
 @app.route("/_add_contact")
@@ -122,8 +129,7 @@ def get_books():
     can be inserted directly in the 'session' object.
     """
     records = [ ]
-    for record in collection.find( { "type": "dated_memo" } ).sort():
-        record["_id"] = str(record["_id"])
+    for record in db.collection_names():
         records.append(record)
     return records 
 

@@ -8,7 +8,7 @@
 <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
 <link href="http://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet" type="text/css">
 <link href="http://fonts.googleapis.com/css?family=Lato" rel="stylesheet" type="text/css">
-<link href="../css/pagestyle.css" rel="stylesheet">
+<link href="../css/pagestyle.css" rel="stylesheet"> 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
 </head>
@@ -50,6 +50,7 @@
 	</form>
 </div>
 
+
 <!-- Container (Address Books List Section) -->
 <div id="books" class="container-fluid">
 	<div class="text-center">
@@ -70,6 +71,15 @@
 	</div>
 </div>
 
+
+{% if session.books %}
+  {% for book in session.books %}
+      {{ book }}
+  <br>
+  {% endfor %}
+{% else %}
+  <p>No books for you. </p>  
+{% endif %}
 
 <!-- Container (Support Contact Section) -->
 <div id="support" class="container-fluid bg-grey">
@@ -155,10 +165,16 @@ $(document).ready(function(){
 	});
 })
 
-    function createbook() {
-    	var bookName = document.getElementById("NEW-ADDRESS-BOOK").value;
-    	alert(bookName);
-    }
+
+$SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
+
+function createbook() {
+	var bookName = document.getElementById("NEW-ADDRESS-BOOK").value;
+
+	// AJAX request
+	$.getJSON($SCRIPT_ROOT + '/_add_book', { book_name: bookName } );
+}
+
 </script>
 
 </body>
