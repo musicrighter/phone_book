@@ -67,7 +67,7 @@ def index():
 
 @app.route("/openBook")
 def openBook():
-    return flask.render_template('layout-1.html?book=booya')
+    return flask.render_template('layout-1.html')
 
 @app.route("/createEntry")
 def createEntry():
