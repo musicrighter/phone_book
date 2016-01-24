@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- Theme Made By www.w3schools.com - No Copyright -->
+<title>SmartBook</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link href="../static/bootstrap-3.3.6-dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="http://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=Lato" rel="stylesheet" type="text/css">
+<link href="../static/pagestyle.css" rel="stylesheet">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+
+</head>
+<body id="myPage" data-spy="scroll" data-target=".navbar" data-offset="60">
+
+<nav class="navbar navbar-default navbar-fixed-top">
+				<div class="container">
+								<div class="navbar-header">
+												<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+																<span class="icon-bar"></span>
+																<span class="icon-bar"></span>
+																<span class="icon-bar"></span>                        
+												</button>
+								</div>
+								<div class="collapse navbar-collapse" id="myNavbar">
+												<ul class="nav navbar-nav navbar-right">
+																<li><a href="#about">ABOUT</a></li>
+																<li><a href="#books">MY BOOKS</a></li>
+																<li><a href="#support">SUPPORT</a></li>
+												</ul>
+								</div>
+				</div>
+</nav>
+
+<div class="jumbotron text-center">
+				<h1>Address Book 1</h1> 
+				<p>Add new entry to the book</p> 
+</div>
+
+<!-- Container (Address Books List Section) -->
+<div id="books" class="container-fluid">
+		<div class="text-center">
+		</div>
+		<div class="row slideanim">
+				<div class="row">
+					<div class="col-sm-4">
+						<div class="panel panel-primary">
+									<input type="text" class="form-control" id="FirstName" placeholder="First name" maxlength="50" />
+						</div>
+					</div>  
+					<div class="col-sm-4">  
+						<div class="panel panel-success">
+									<input type="text" class="form-control" id="LastName" placeholder="Last name" maxlength="50" />
+						</div>    
+					</div>
+					<div class="col-sm-8">  
+						<div class="panel panel-success">
+									<input type="text" class="form-control" id="NUMBER" placeholder="Number" maxlength="11" />
+						</div>    
+					</div>
+					<div class="col-sm-8">  
+						<div class="panel panel-success">
+									<input type="email" class="form-control" id="EMAIL" placeholder="Email" maxlength="100" />
+						</div>    
+					</div>
+					<div class="col-sm-8">  
+						<div class="panel panel-success">
+									<input type="text" class="form-control" id="ADDRESS1" placeholder="Street address 1" maxlength="100" />
+						</div>    
+					</div>
+					<div class="col-sm-8">  
+						<div class="panel panel-success">
+									<input type="text" class="form-control" id="ADDRESS2" placeholder="Street address 2" maxlength="100" />
+						</div>    
+					</div>
+					
+					<div class="col-sm-5">  
+						<div class="panel panel-success">
+									<input type="text" class="form-control" id="CITY" placeholder="City" maxlength="20"/>
+						</div>    
+					</div>
+					<div class="col-sm-1">  
+						<div class="panel panel-success">
+									<input type="text" class="form-control" id="STATE" placeholder="State" maxlength="20" />
+						</div>    
+					</div>
+					<div class="col-sm-1">  
+						<div class="panel panel-success">
+									<input type="text" class="form-control" id="ZIPCODE" placeholder="Zipcode" maxlength="5" />
+						</div>    
+					</div>
+					<div class="col-sm-1">  
+						<div class="panel panel-success">
+									<input type="text" class="form-control" id="EXTENSION" placeholder="Ext" maxlength="4"/>
+						</div>    
+					</div>
+
+				</div>  
+</div>
+
+			<div class="container"> 
+				<div class="col-md-4">
+				<button class="btn btn-color" type="button" onclick="addContact()"> Save </button>
+				</div>
+				<div class="col-md-4">
+				<button class="btn btn-color" type="button"> Cancel </button>
+				</div>
+			</div>
+
+
+			<footer class="container-fluid text-center">
+							<a href="#myPage" title="To Top">
+											<span class="glyphicon glyphicon-chevron-up"></span>
+							</a>
+			</footer>
+
+			<script>
+$(document).ready(function(){
+			// Add smooth scrolling to all links in navbar + footer link
+			$(".navbar a, footer a[href='#myPage']").on('click', function(event) {
+
+							// Prevent default anchor click behavior
+							event.preventDefault();
+
+							// Store hash
+							var hash = this.hash;
+
+							// Using jQuery's animate() method to add smooth page scroll
+							// The optional number (900) specifies the number of milliseconds it takes to scroll to the specified area
+							$('html, body').animate({
+scrollTop: $(hash).offset().top
+}, 900, function(){
+
+// Add hash (#) to URL when done scrolling (default click behavior)
+window.location.hash = hash;
+});
+												});
+
+// Slide in elements on scroll
+$(window).scroll(function() {
+								$(".slideanim").each(function(){
+												var pos = $(this).offset().top;
+
+												var winTop = $(window).scrollTop();
+												if (pos < winTop + 600) {
+												$(this).addClass("slide");
+												}
+												});
+								});
+})
+
+function addContact() {
+		var FirstName = document.getElementById("FirstName").value;
+		var LastName = document.getElementById("LastName").value;
+		var NUMBER = document.getElementById("NUMBER").value;
+		var EMAIL = document.getElementById("EMAIL").value;
+		var ADDRESS1 = document.getElementById("ADDRESS1").value;
+		var ADDRESS2 = document.getElementById("ADDRESS2").value;
+		var CITY = document.getElementById("CITY").value;
+		var STATE = document.getElementById("STATE").value;
+		var ZIPCODE = document.getElementById("ZIPCODE").value;
+		var EXTENSION = document.getElementById("EXTENSION").value;
+	// AJAX request
+	$.getJSON($SCRIPT_ROOT + '/_add_book', { book_name: bookName } );
+}
+								</script>
+
+								</body>
+								</html>

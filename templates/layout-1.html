@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head> 
+		<title> Smartbook </title> 
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<link href="../bootstrap-3.3.6-dist/css/bootstrap.min.css" rel="stylesheet">
+		<link href="http://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet" type="text/css">
+		<link href="http://fonts.googleapis.com/css?family=Lato" rel="stylesheet" type="text/css">
+		<link href="../static/pagestyle.css" rel="stylesheet">
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+  		<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+
+	</head>
+	
+	<body>
+	<div class="container-fluid">
+		<div class="row">
+		
+			<h1>Smartbook</h1>
+			<p> This is address book (address book #) </p>	
+			
+			<hr size="20">
+			
+			<div class="col-md-4"> 
+				<button class="btn-lrg" onclick="window.open('createEntry')"> Add new entry </button>
+			</div>
+						
+			<div class="col-md-8">
+				<div class="dropdown">
+					<button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown"> Sort
+					<span class="caret"></span></button>
+					<ul class="dropdown-menu">
+						<li><a href="#">By name</a></li>
+						<li><a href="#">By zipcode</a></li>
+					</ul>
+				</div>
+			</div>
+			
+		</div>		 
+	</div> 
+	
+	<hr>
+	
+	<div class="container-fluid">
+	
+			<button> Edit </button> 
+			<button> Delete </button>
+			<div class="col-md-7">
+				<ul class="list-group">
+					<li class="list-group-item">First entry</li>
+				</ul>
+			</div>	
+	</div> 
+	</body> 
+	<div class="col-md-7">
+	<form class="navbar-form" role="search"> 
+		<div class="form-group">
+        	<input type="text" class="form-control" placeholder="Search">
+		</div>
+	</form>
+	</div>
+
+</html> 
+

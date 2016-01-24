@@ -60,11 +60,18 @@ def index():
   return flask.render_template('index.html')
 
 
-@app.route("/create_contact")
-def create_contact():
-    app.logger.debug("Create")
-    return flask.render_template('create.html')
+#@app.route("/create_contact")
+#def create_contact():
+#    app.logger.debug("Create")
+#    return flask.render_template('create.html')
 
+@app.route("/openBook")
+def openBook():
+    return flask.render_template('layout-1.html?book=booya')
+
+@app.route("/createEntry")
+def createEntry():
+    return flask.render_template('create.html')
 
 @app.route("/_add_book")
 def add_book():
@@ -82,21 +89,23 @@ def add_contact():
     last_name = request.args.get('last_name', 0, type=str)
     phone = request.args.get('phone', 0, type=str)
     email =  request.args.get('email', 0, type=str)
-    street_address = request.args.get('street_address', 0, type=str)
+    street_address1 = request.args.get('street_address1', 0, type=str)
+    street_address2 = request.args.get('street_address2', 0, type=str)
     city = request.args.get('city', 0, type=str)
     state = request.args.get('state', 0, type=str)
     zipcode = request.args.get('zipcode', 0, type=str)
+    extension = request.args.get('extension', 0, type=str)
 
-    put_memo(first_name, last_name, phone, email, street_address, city, state, zipcode)
+    put_entry(first_name, last_name, phone, email, street_address1,street_address2, city, state, zipcode, extension)
 
     return flask.redirect(url_for('index'))
 
 
 @app.route("/_del_entry")
 def del_entry():
-    memo_id = request.args.get('_id', 0, type=str)
-    collection.remove({'_id': ObjectId(memo_id)})
-    return flask.redirect(url_for('index'))
+    book = request.args.get('_id', 0, type=str)
+    db[book].drop()
+    return flask.render_template('index.html')
 
 
 @app.errorhandler(404)
@@ -130,10 +139,12 @@ def get_books():
     """
     records = [ ]
     for record in db.collection_names():
-        records.append(record)
+	if (record != "system.indexes" and record != "system.users"):
+            records.append(record)
+    print(records)
     return records 
 
-def put_entry(address_book, first_name, last_name, phone, email, street_address, city, state, zipcode):
+def put_entry(address_book, first_name, last_name, phone, email, street_address1,street_address2, city, state, zipcode, extension):
     """
     Place contact into database
     """
@@ -148,10 +159,12 @@ def put_entry(address_book, first_name, last_name, phone, email, street_address,
                "last_name": last_name,
                "phone": phone,
                "email": email,
-               "street_address": street_address, 
+               "street_address1": street_address1,
+               "street_address2": street_address2,		 
                "city": city,
                "state": state,
-               "zipcode": zipcode 
+               "zipcode": zipcode,
+               "extension": extension
             }
     collection.insert(record)
     return 
