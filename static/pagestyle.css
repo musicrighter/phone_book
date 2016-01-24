@@ -16,7 +16,11 @@ h4 {
 				color: #303030;
 				font-weight: 400;
 				margin-bottom: 30px;
-}  
+}
+input[type=text]:focus, input[type=email]:focus, textarea:focus {
+				box-shadow:0 0 5px #f4511e;
+				border: 1px solid #f4511e;
+}		  
 .jumbotron {
 				background-color: #f4511e;
 				color: #fff;
