@@ -18,12 +18,12 @@
 		<div class="row">
 		
 			<h1>Smartbook</h1>
-			<p> This is address book (address book #) </p>	
+			<p id="bookName"> name</p>	
 			
 			<hr size="20">
 			
 			<div class="col-md-4"> 
-				<button class="btn-lrg" onclick="window.open('createEntry')"> Add new entry </button>
+				<button class="btn-lrg" onclick="openCreate()"> Add new entry </button>
 			</div>
 						
 			<div class="col-md-8">
@@ -63,3 +63,13 @@
 
 </html> 
 
+<script>
+$(document).ready(function() {
+	var book = location.search.split('book=')[1];
+	document.getElementById("bookName").innerHTML = book;
+})
+function openCreate(){
+	var book = location.search.split('book=')[1];
+	window.open('createEntry?book='+book);
+}
+</script>

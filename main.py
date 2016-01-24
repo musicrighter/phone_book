@@ -59,15 +59,11 @@ def index():
   flask.session['books'] = get_books()
   return flask.render_template('index.html')
 
-
-#@app.route("/create_contact")
-#def create_contact():
-#    app.logger.debug("Create")
-#    return flask.render_template('create.html')
-
 @app.route("/openBook")
 def openBook():
-    return flask.render_template('layout-1.html')
+    book_name = request.args.get('book', 0, type=str)
+    flask.session['contacts'] = get_contacts(book_name)
+    return flask.render_template('book.html')
 
 @app.route("/createEntry")
 def createEntry():
@@ -76,15 +72,14 @@ def createEntry():
 @app.route("/_add_book")
 def add_book():
     book_name = request.args.get('book_name', 0, type=str)
-    
-    db[book_name].insert({"a" : "a"})
-
+    db[book_name].insert({"b" : "b"})
 
     return flask.render_template('index.html')
 
 
 @app.route("/_add_contact")
 def add_contact():
+    book_name = request.args.get('book', 0, type=str)
     first_name = request.args.get('first_name', 0, type=str)
     last_name = request.args.get('last_name', 0, type=str)
     phone = request.args.get('phone', 0, type=str)
@@ -95,9 +90,7 @@ def add_contact():
     state = request.args.get('state', 0, type=str)
     zipcode = request.args.get('zipcode', 0, type=str)
     extension = request.args.get('extension', 0, type=str)
-
-    put_entry(first_name, last_name, phone, email, street_address1,street_address2, city, state, zipcode, extension)
-
+    put_entry(book_name, first_name, last_name, phone, email, street_address1, street_address2, city, state, zipcode, extension)
     return flask.redirect(url_for('index'))
 
 
@@ -120,16 +113,16 @@ def page_not_found(error):
 # Functions available to the page code above
 #
 ##############
-def get_contacts():
+def get_contacts(book_name):
     """
     Returns all memos in the database, in a form that
     can be inserted directly in the 'session' object.
     """
     records = [ ]
-    for record in collection.find( { "type": "contacts" } ).sort("date", 1):
-        record['date'] = arrow.get(record['date']).isoformat()
+    for record in db[book_name].find( { "type": "contact" } ):
         record["_id"] = str(record["_id"])
-        records.append(record)
+        records.append(record['first_name'] + " " + record['last_name'])
+    print(records)
     return records 
 
 def get_books():
@@ -141,19 +134,12 @@ def get_books():
     for record in db.collection_names():
 	if (record != "system.indexes" and record != "system.users"):
             records.append(record)
-    print(records)
     return records 
 
-def put_entry(address_book, first_name, last_name, phone, email, street_address1,street_address2, city, state, zipcode, extension):
+def put_entry(book_name, first_name, last_name, phone, email, street_address1, street_address2, city, state, zipcode, extension):
     """
     Place contact into database
     """
-    try: 
-        collection = db.address_book
-    except:
-        print("Failure opening database")
-        sys.exit(1)
-
     record = { "type": "contact",
                "first_name": first_name,
                "last_name": last_name,
@@ -166,7 +152,7 @@ def put_entry(address_book, first_name, last_name, phone, email, street_address1
                "zipcode": zipcode,
                "extension": extension
             }
-    collection.insert(record)
+    db[book_name].insert(record)
     return 
 
 

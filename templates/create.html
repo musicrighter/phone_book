@@ -28,14 +28,13 @@
 												<ul class="nav navbar-nav navbar-right">
 																<li><a href="#about">ABOUT</a></li>
 																<li><a href="#books">MY BOOKS</a></li>
-																<li><a href="#support">SUPPORT</a></li>
 												</ul>
 								</div>
 				</div>
 </nav>
 
 <div class="jumbotron text-center">
-				<h1>Address Book 1</h1> 
+				<h1 id="book">Address Book 1</h1> 
 				<p>Add new entry to the book</p> 
 </div>
 
@@ -57,7 +56,7 @@
 					</div>
 					<div class="col-sm-8">  
 						<div class="panel panel-success">
-									<input type="text" class="form-control" id="NUMBER" placeholder="Number" maxlength="11" />
+									<input type="text" class="form-control" id="PHONENUMBER" placeholder="Number" maxlength="11" />
 						</div>    
 					</div>
 					<div class="col-sm-8">  
@@ -116,8 +115,11 @@
 							</a>
 			</footer>
 
-			<script>
+			<script type="text/javascript">
 $(document).ready(function(){
+			var book = location.search.split('book=')[1];
+	                document.getElementById("book").innerHTML = book;
+
 			// Add smooth scrolling to all links in navbar + footer link
 			$(".navbar a, footer a[href='#myPage']").on('click', function(event) {
 
@@ -138,6 +140,7 @@ window.location.hash = hash;
 });
 												});
 
+
 // Slide in elements on scroll
 $(window).scroll(function() {
 								$(".slideanim").each(function(){
@@ -150,11 +153,12 @@ $(window).scroll(function() {
 												});
 								});
 })
-
+$SCRIPT_ROOT = {{request.script_root|tojson|safe}};
 function addContact() {
+		var book = location.search.split('book=')[1];
 		var FirstName = document.getElementById("FirstName").value;
 		var LastName = document.getElementById("LastName").value;
-		var NUMBER = document.getElementById("NUMBER").value;
+		var PHONENUMBER = document.getElementById("PHONENUMBER").value;
 		var EMAIL = document.getElementById("EMAIL").value;
 		var ADDRESS1 = document.getElementById("ADDRESS1").value;
 		var ADDRESS2 = document.getElementById("ADDRESS2").value;
@@ -162,10 +166,12 @@ function addContact() {
 		var STATE = document.getElementById("STATE").value;
 		var ZIPCODE = document.getElementById("ZIPCODE").value;
 		var EXTENSION = document.getElementById("EXTENSION").value;
+		alert("" +book+ FirstName+ LastName+ PHONENUMBER+ EMAIL+ ADDRESS1+ ADDRESS2+ CITY+ STATE+ ZIPCODE+ EXTENSION);
 	// AJAX request
-	$.getJSON($SCRIPT_ROOT + '/_add_contact', { first_name: FirstName, 
+	$.getJSON($SCRIPT_ROOT + '/_add_contact', {     book: book,
+							first_name: FirstName, 
 							last_name: LastName,
-							phone:NUMBER,
+							phone:PHONENUMBER,
 							email:EMAIL,
 							street_address1:ADDRESS1,
 							street_address2:ADDRESS2,

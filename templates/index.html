@@ -35,7 +35,6 @@
 			<ul class="nav navbar-nav navbar-right">
 				<li><a href="#about">ABOUT</a></li>
 				<li><a href="#books">MY BOOKS</a></li>
-				<li><a href="#support">SUPPORT</a></li>
 			</ul>
 		</div>
 	</div>
@@ -45,7 +44,7 @@
 	<h1>SmartBook</h1> 
 	<p>Create a new address book</p> 
 	<form class="form-inline">
-		<input type="email" class="form-control" size="50" id="NEW-ADDRESS-BOOK" placeholder="Name of Address Book" required>
+		<input type="text" class="form-control" size="50" id="NEW-ADDRESS-BOOK" placeholder="Name of Address Book" required>
 		<button type="button" class="btn btn-danger" onclick="createbook()">Create</button>
 	</form>
 </div>
@@ -73,35 +72,6 @@
 
 
 {% endfor %}
-
-<!-- Container (Support Contact Section) -->
-<div id="support" class="container-fluid bg-grey">
-	<h2 class="text-center">SUPPORT</h2>
-	<div class="row">
-		<div class="col-sm-5">
-			<p>Contact us and we'll get back to you within 24 hours.</p>
-			<p><span class="glyphicon glyphicon-map-marker"></span> Eugene, US</p>
-			<p><span class="glyphicon glyphicon-phone"></span> +503-577-4053</p>
-			<p><span class="glyphicon glyphicon-envelope"></span> musicrighter@gmail.com</p>	   
-		</div>
-		<div class="col-sm-7 slideanim">
-			<div class="row">
-				<div class="col-sm-6 form-group">
-					<input class="form-control" id="name" name="name" placeholder="Name" type="text" required>
-				</div>
-				<div class="col-sm-6 form-group">
-					<input class="form-control" id="email" name="email" placeholder="Email" type="email" required>
-				</div>
-			</div>
-			<textarea class="form-control" id="comments" name="comments" placeholder="Comment" rows="5"></textarea><br>
-			<div class="row">
-				<div class="col-sm-12 form-group">
-					<button class="btn btn-default pull-right" type="submit">Send</button>
-				</div>
-			</div>	
-		</div>
-	</div>
-</div>
 
 <footer class="container-fluid text-center">
 	<a href="#myPage" title="To Top">
