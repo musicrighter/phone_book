@@ -5,61 +5,110 @@
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<link href="../bootstrap-3.3.6-dist/css/bootstrap.min.css" rel="stylesheet">
+		<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
 		<link href="http://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet" type="text/css">
 		<link href="http://fonts.googleapis.com/css?family=Lato" rel="stylesheet" type="text/css">
 		<link href="../static/pagestyle.css" rel="stylesheet">
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
   		<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
-
 	</head>
 	
+
+
+
 	<body>
-	<div class="container-fluid">
+
+	<nav class="navbar navbar-default navbar-fixed-top">
+	<div class="container">
+		<div class="navbar-header" height="300px">
+			<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>                        
+			</button>
+		</div>
+		<div class="collapse navbar-collapse" id="myNavbar">
+			<ul class="nav navbar-nav navbar-right">
+				<li><a href="#about">ABOUT</a></li>
+				<li><a href="#books">MY BOOKS</a></li>
+			</ul>
+		</div>
+	</div>
+	</nav>
+
+	<div class="jumbotron text-center">
+	<h1 id="bookName"> name</h1> 
+	<p> Hello. </p>
+		
+	</div>
+	<div class="container-fluid center">
 		<div class="row">
 		
-			<h1>Smartbook</h1>
-			<p id="bookName"> name</p>	
-			
-			<hr size="20">
-			
-			<div class="col-md-4"> 
-				<button class="btn-lrg" onclick="openCreate()"> Add new entry </button>
-			</div>
+			<!--<p id="bookName"> name</p> -->
 						
-			<div class="col-md-8">
+			<div class="col-md-2"> 
+					<button class="btn-lrg btn-block" onclick="openCreate()"> Add new entry </button>
+			</div>
+
+			<div class="col-md-4">
+					<div class="form-group">
+        				<input type="text" class="form-control" placeholder="Search">
+					</div>
+			</div>
+					
+			<div class="col-md-2">
 				<div class="dropdown">
-					<button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown"> Sort
-					<span class="caret"></span></button>
-					<ul class="dropdown-menu">
-						<li><a href="#">By name</a></li>
-						<li><a href="#">By zipcode</a></li>
-					</ul>
+						<button class="btn btn-primary btn-block dropdown-toggle" type="button" data-toggle="dropdown"> Sort
+						<span class="caret"></span></button>
+						<ul class="dropdown-menu">
+							<li><a href="#">By name</a></li>
+							<li><a href="#">By zipcode</a></li>
+						</ul>
 				</div>
 			</div>
 			
-		</div>		 
+		</div>	
+	 
 	</div> 
 	
 	<hr>
+	<div id="books" class="container-fluid">
+	<div class="text-center">
+	</div>
+	<div class="row slideanim">
+		<div class="row">
+			<div class="col-sm-12">
+				<div class="panel panel-primary">
+					<div class="panel-body clearfix"> 
+						{{ book }}
+						<button type="button" class="btn btn-default pull-right" onclick="deleteConf('{{book}}')">Delete</button>
+						<button type="button" class="btn btn-default pull-right" onclick="jopenbook('{{book}}')">Edit</button>
+						<button type="button" class="btn btn-default pull-right" onclick="jopenbook('{{book}}')">View</button>
+					</div>
+				</div>
+			</div>  
+		</div>  
+	</div>
+	</div>
 	
 	<div class="container-fluid">
-	
-			<button> Edit </button> 
-			<button> Delete </button>
-			<div class="col-md-7">
-				<ul class="list-group">
-					<li class="list-group-item">First entry</li>
-				</ul>
-			</div>	
+		<!--<div class="row">
+			<div class="col-md-6">
+				<div class="panel">
+					<div class="panel-body"> Entry </div>
+							<div class="col-md-2">
+								<button> Edit </button>
+							</div>
+							<div class="cold-md-2">
+								<button> Delete </button>
+							</div>
+				</div>
+		</div> -->
+
+
+
 	</div> 
-	</body> 
-	<div class="col-md-7">
-	<form class="navbar-form" role="search"> 
-		<div class="form-group">
-        	<input type="text" class="form-control" placeholder="Search">
-		</div>
-	</form>
-	</div>
+	</body>
 
 </html> 
 
