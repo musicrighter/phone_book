@@ -26,8 +26,8 @@
 		</div>
 		<div class="collapse navbar-collapse" id="myNavbar">
 			<ul class="nav navbar-nav navbar-right">
-				<li><a href="#about">ABOUT</a></li>
-				<li><a href="#books">MY BOOKS</a></li>
+				<li><a id="about" href="#about">ABOUT</a></li>
+				<li><a id="my_books" href="#books">MY BOOKS</a></li>
 			</ul>
 		</div>
 	</div>
@@ -99,6 +99,15 @@ $(document).ready(function() {
 	var book = location.search.split('book=')[1];
 	document.getElementById("bookName").innerHTML = book;
 })
+
+$('#my_books').click(function () {
+	if (window.opener && !window.opener.closed) {
+		window.opener.alert("Your book is still open");
+	}
+	else {
+		location.href = ('index');
+	}
+});
 
 function openCreate(){
 	var book = location.search.split('book=')[1];
