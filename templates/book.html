@@ -12,9 +12,6 @@
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
   		<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
 	</head>
-	
-
-
 
 	<body>
 
@@ -37,88 +34,93 @@
 	</nav>
 
 	<div class="jumbotron text-center">
-	<h1 id="bookName"> name</h1> 
-	<p> Hello. </p>
+	<h1 id="bookName"> name</h1>
 		
 	</div>
 	<div class="container-fluid center">
 		<div class="row">
-		
-			<!--<p id="bookName"> name</p> -->
-						
 			<div class="col-md-2"> 
 					<button class="btn-lrg btn-block" onclick="openCreate()"> Add new entry </button>
 			</div>
 
 			<div class="col-md-4">
-					<div class="form-group">
-        				<input type="text" class="form-control" placeholder="Search">
-					</div>
+				<div class="form-group">
+    				<input type="text" class="form-control" placeholder="Search">
+				</div>
 			</div>
 					
 			<div class="col-md-2">
 				<div class="dropdown">
-						<button class="btn btn-primary btn-block dropdown-toggle" type="button" data-toggle="dropdown"> Sort
-						<span class="caret"></span></button>
-						<ul class="dropdown-menu">
-							<li><a href="#">By name</a></li>
-							<li><a href="#">By zipcode</a></li>
-						</ul>
+					<button class="btn btn-primary btn-block dropdown-toggle" type="button" data-toggle="dropdown"> Sort
+					<span class="caret"></span></button>
+					<ul class="dropdown-menu">
+						<li><a href="#">By name</a></li>
+						<li><a href="#">By zipcode</a></li>
+					</ul>
 				</div>
 			</div>
-			
 		</div>	
-	 
 	</div> 
 	
 	<hr>
+
+	{% for contact in session.contacts %}
 	<div id="books" class="container-fluid">
-	<div class="text-center">
-	</div>
-	<div class="row slideanim">
-		<div class="row">
-			<div class="col-sm-12">
-				<div class="panel panel-primary">
-					<div class="panel-body clearfix"> 
-						{{ book }}
-						<button type="button" class="btn btn-default pull-right" onclick="deleteConf('{{book}}')">Delete</button>
-						<button type="button" class="btn btn-default pull-right" onclick="jopenbook('{{book}}')">Edit</button>
-						<button type="button" class="btn btn-default pull-right" onclick="jopenbook('{{book}}')">View</button>
+		<div class="text-center">
+		</div>
+		<div class="row slideanim">
+			<div class="row">
+				<div class="col-sm-8">
+					<div class="panel panel-primary">
+						<div class="panel-body clearfix"> 
+							{% for field in contact %}
+								{% if contact[field] != "" and field != "_id" and field != "type" %}
+									{{ field + ": " + contact[field] }}
+								{% endif %}
+							{% endfor %}
+							<!-- <button type="button" class="btn btn-default pull-right" onclick="deleteCont('{{contact}}', '{{contact._id}}')">Delete</button> -->
+							<button type="button" class="btn btn-default pull-right" onclick="deleteCont('{{contact.first_name}}', '{{contact._id}}')">Delete</button>
+							<button type="button" class="btn btn-default pull-right" onclick="editCont()">Edit</button>
+							<button type="button" class="btn btn-default pull-right" onclick="viewCont()">View</button>
+						</div>
 					</div>
-				</div>
+				</div>  
 			</div>  
-		</div>  
+		</div>
 	</div>
-	</div>
-	
-	<div class="container-fluid">
-		<!--<div class="row">
-			<div class="col-md-6">
-				<div class="panel">
-					<div class="panel-body"> Entry </div>
-							<div class="col-md-2">
-								<button> Edit </button>
-							</div>
-							<div class="cold-md-2">
-								<button> Delete </button>
-							</div>
-				</div>
-		</div> -->
+	{% endfor %}
 
-
-
-	</div> 
 	</body>
 
 </html> 
 
-<script>
+<script type="text/javascript">
 $(document).ready(function() {
 	var book = location.search.split('book=')[1];
 	document.getElementById("bookName").innerHTML = book;
 })
+
 function openCreate(){
 	var book = location.search.split('book=')[1];
-	window.open('createEntry?book='+book);
+	location.href = ('createEntry?book='+book);
+}
+function editCont(){
+	var book = location.search.split('book=')[1];
+	location.href = ('createEntry?book='+book);
+}
+function viewCont(){
+	var book = location.search.split('book=')[1];
+	location.href = ('createEntry?book='+book);
+}
+
+$SCRIPT_ROOT = {{request.script_root|tojson|safe}};
+
+function deleteCont(contact, id){
+	var book = location.search.split('book=')[1];
+	var delConf = confirm("Are you sure you want to delete " + contact + "?");
+	if (delConf) {
+		$.getJSON($SCRIPT_ROOT + '/_del_contact', { _id: id, book_name: book } );
+		setTimeout(function(){ location.reload(true); }, 100);	
+	}
 }
 </script>

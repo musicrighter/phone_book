@@ -55,9 +55,8 @@ app.secret_key = str(uuid.uuid4())
 @app.route("/")
 @app.route("/index")
 def index():
-  app.logger.debug("Main page entry")
-  flask.session['books'] = get_books()
-  return flask.render_template('index.html')
+    flask.session['books'] = get_books()
+    return flask.render_template('index.html')
 
 @app.route("/openBook")
 def openBook():
@@ -73,9 +72,7 @@ def createEntry():
 def add_book():
     book_name = request.args.get('book_name', 0, type=str)
     db[book_name].insert({"b" : "b"})
-
     return flask.render_template('index.html')
-
 
 @app.route("/_add_contact")
 def add_contact():
@@ -100,6 +97,13 @@ def del_entry():
     db[book].drop()
     return flask.render_template('index.html')
 
+@app.route("/_del_contact")
+def del_contact():
+    contact_id = request.args.get('_id', 0, type=str)
+    book = request.args.get('book_name', 0, type=str)
+    print(db[book])
+    db[book].remove({'_id': ObjectId(contact_id)})
+    return flask.render_template('book.html')
 
 @app.errorhandler(404)
 def page_not_found(error):
@@ -120,9 +124,9 @@ def get_contacts(book_name):
     """
     records = [ ]
     for record in db[book_name].find( { "type": "contact" } ):
-        record["_id"] = str(record["_id"])
-        records.append(record['first_name'] + " " + record['last_name'])
-    print(records)
+    	record["_id"] = str(record["_id"])
+	records.append(record)
+        #records.append(record['first_name'] + " " + record['last_name'])
     return records 
 
 def get_books():
@@ -132,8 +136,8 @@ def get_books():
     """
     records = [ ]
     for record in db.collection_names():
-	if (record != "system.indexes" and record != "system.users"):
-            records.append(record)
+  	if (record != "system.indexes" and record != "system.users"):
+    	    records.append(record)
     return records 
 
 def put_entry(book_name, first_name, last_name, phone, email, street_address1, street_address2, city, state, zipcode, extension):

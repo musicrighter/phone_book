@@ -18,13 +18,13 @@ h4 {
 				margin-bottom: 30px;
 }
 input[type=text]:focus, input[type=email]:focus, textarea:focus {
-				box-shadow:0 0 5px #f4511e;
+				box-shadow:0 0 3px #c4c4c4;
 				border: 1px solid #f4511e;
 }		  
 .jumbotron {
 				background-color: #f4511e;
 				color: #fff;
-				padding: 90px 25px;
+				padding: 20px 25px;
 				font-family: Montserrat, sans-serif;
 }
 .container-fluid {
@@ -40,7 +40,7 @@ input[type=text]:focus, input[type=email]:focus, textarea:focus {
 .btn-color { 
 				background-color: #f4511e;
 				font-size: 130%;
-				color:#f4511e;
+				color: #ffffff;
 				width: 80%;
 				border: 2px solid #f4511e;
 				}
@@ -83,7 +83,7 @@ input[type=text]:focus, input[type=email]:focus, textarea:focus {
 				font-style: normal;
 }
 .panel {
-				border: 1px solid #f4511e; 
+				border: 1px solid #c4c4c4; 
 				border-radius:10 !important;
 				transition: box-shadow 0.5s;
 }
