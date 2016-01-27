@@ -31,12 +31,6 @@
 				<span class="icon-bar"></span>                        
 			</button>
 		</div>
-		<div class="collapse navbar-collapse" id="myNavbar">
-			<ul class="nav navbar-nav navbar-right">
-				<li><a href="#about">ABOUT</a></li>
-				<li><a href="#books">MY BOOKS</a></li>
-			</ul>
-		</div>
 	</div>
 </nav>
 
@@ -44,8 +38,8 @@
 	<h1>SmartBook</h1> 
 	<p>Create a new address book</p> 
 	<form class="form-inline">
-		<input type="text" class="form-control" size="50" id="NEW-ADDRESS-BOOK" placeholder="Name of Address Book" required>
-		<button type="button" class="btn btn-danger" onclick="createbook()">Create</button>
+		<input type="text" class="form-control" size="50" onKeydown="Javascript: if (event.keyCode==13) createbook()" id="createText" placeholder="Name of Address Book" required>
+		<button type="button" class="btn btn-danger" id="createButton" onclick="createbook()">Create</button>
 	</form>
 </div>
 {% for book in session.books %}
@@ -92,8 +86,6 @@ $(document).ready(function(){
 	Passkey = JSON.stringify({'password': Passkey});
 
 
-
-
 	// Add smooth scrolling to all links in navbar + footer link
 	$(".navbar a, footer a[href='#myPage']").on('click', function(event) {
 
@@ -128,23 +120,22 @@ $(document).ready(function(){
 	});
 })
 
-
 $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
 function deleteConf(book) {
 	var delConf = confirm("Are you sure you want to delete " + book + "?");
 	if (delConf) {
 		$.getJSON($SCRIPT_ROOT + '/_del_entry', { _id: book } );
-		setTimeout(function(){ location.reload(true); }, 100);
+		setTimeout(function(){ location.reload(true); }, 150);
 		
 	}
 
 }
 function createbook() {
-	var bookName = document.getElementById("NEW-ADDRESS-BOOK").value;
+	var bookName = document.getElementById("createText").value;
 
 	// AJAX request
 	$.getJSON($SCRIPT_ROOT + '/_add_book', { book_name: bookName } );
-	setTimeout(function(){ location.reload(true); }, 100);
+	setTimeout(function(){ location.reload(true); }, 150);
 }
 
 function jopenbook(book) { 

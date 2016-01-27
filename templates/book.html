@@ -75,7 +75,7 @@
 						<div class="panel-body clearfix"> 
 							{% for field in contact %}
 								{% if contact[field] != "" and field != "_id" and field != "type" %}
-									{{ field + ": " + contact[field] }}
+									{{ contact[field] }}
 								{% endif %}
 							{% endfor %}
 							<!-- <button type="button" class="btn btn-default pull-right" onclick="deleteCont('{{contact}}', '{{contact._id}}')">Delete</button> -->
@@ -96,10 +96,15 @@
 
 <script type="text/javascript">
 $(document).ready(function() {
-	var book = location.search.split('book=')[1];
+	var book = "";
+	var urlVar = location.search.split('book=')[1];
+	book = decodeURIComponent(urlVar);
 	document.getElementById("bookName").innerHTML = book;
 })
 
+$('#about').click(function () {
+	alert("Smartbook: A web based Address book. Create multiple books and add contacts to each");
+});
 $('#my_books').click(function () {
 	if (window.opener && !window.opener.closed) {
 		window.opener.alert("Your book is still open");
@@ -125,11 +130,14 @@ function viewCont(){
 $SCRIPT_ROOT = {{request.script_root|tojson|safe}};
 
 function deleteCont(contact, id){
-	var book = location.search.split('book=')[1];
+	var book = "";
+	var urlVar = location.search.split('book=')[1];
+	book = decodeURIComponent(urlVar);
+
 	var delConf = confirm("Are you sure you want to delete " + contact + "?");
 	if (delConf) {
 		$.getJSON($SCRIPT_ROOT + '/_del_contact', { _id: id, book_name: book } );
-		setTimeout(function(){ location.reload(true); }, 100);	
+		setTimeout(function(){ location.reload(true); }, 150);	
 	}
 }
 </script>

@@ -23,17 +23,11 @@
 				<span class="icon-bar"></span>                        
 			</button>
 		</div>
-		<div class="collapse navbar-collapse" id="myNavbar">
-		<ul class="nav navbar-nav navbar-right">
-			<li><a href="#about">ABOUT</a></li>
-			<li><a href="#books">MY BOOKS</a></li>
-		</ul>
-		</div>
 	</div>
 </nav>
 
 <div class="jumbotron text-center">
-	<h1 id="book">Address Book 1</h1> 
+	<h1 id="bookName">Address Book 1</h1> 
 	<p>Add new entry to the book</p> 
 </div>
 
@@ -116,8 +110,10 @@
 
 <script type="text/javascript">
 $(document).ready(function(){
-		var book = location.search.split('book=')[1];
-		document.getElementById("book").innerHTML = book;
+		var book = "";
+		var urlVar = location.search.split('book=')[1];
+		book = decodeURIComponent(urlVar);
+		document.getElementById("bookName").innerHTML = book;
 
 		// Add smooth scrolling to all links in navbar + footer link
 		$(".navbar a, footer a[href='#myPage']").on('click', function(event) {
@@ -159,7 +155,10 @@ function cancel() {
 
 $SCRIPT_ROOT = {{request.script_root|tojson|safe}};
 function addContact() {
-	var book = location.search.split('book=')[1];
+	var book = "";
+	var urlVar = location.search.split('book=')[1];
+	book = decodeURIComponent(urlVar);
+
 	var FirstName = document.getElementById("FirstName").value;
 	var LastName = document.getElementById("LastName").value;
 	var PHONENUMBER = document.getElementById("PHONENUMBER").value;
@@ -183,7 +182,7 @@ function addContact() {
 												zipcode:ZIPCODE,
 												extension:EXTENSION } 
 	);
-	setTimeout( function() {location.href = ('openBook?book='+book);}, 100);
+	setTimeout( function() {location.href = ('openBook?book='+book);}, 150);
 
 
 }
