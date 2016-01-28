@@ -35,12 +35,12 @@
 
 	<div class="jumbotron text-center">
 	<h1 id="bookName"> name</h1>
-		
 	</div>
+
 	<div class="container-fluid center">
 		<div class="row">
 			<div class="col-md-2"> 
-					<button class="btn-lrg btn-block" onclick="openCreate()"> Add new entry </button>
+				<button class="btn-lrg btn-block" onclick="openCreate()"> Add new entry </button>
 			</div>
 
 			<div class="col-md-4">
@@ -48,17 +48,14 @@
     				<input type="text" class="form-control" placeholder="Search">
 				</div>
 			</div>
-					
+
 			<div class="col-md-2">
-				<div class="dropdown">
-					<button class="btn btn-primary btn-block dropdown-toggle" type="button" data-toggle="dropdown"> Sort
-					<span class="caret"></span></button>
-					<ul class="dropdown-menu">
-						<li><a href="#">By name</a></li>
-						<li><a href="#">By zipcode</a></li>
-					</ul>
-				</div>
+				<button class="btn btn-primary btn-block" onclick="sortName()">Sort by name</button>
 			</div>
+			<div class="col-md-2">
+				<button class="btn btn-primary btn-block" onclick="sortZip()">Sort by zipcode</button>
+			</div>
+
 		</div>	
 	</div> 
 	
@@ -114,6 +111,16 @@ $('#my_books').click(function () {
 	}
 });
 
+function sortName() {
+	var book = location.search.split('book=')[1];
+	$.getJSON($SCRIPT_ROOT + '/openBook', { book: book, sort: 'name' } );
+	setTimeout(function(){ location.reload(true); }, 150);
+}
+function sortZip() {
+	var book = location.search.split('book=')[1];
+	$.getJSON($SCRIPT_ROOT + '/openBook', { book: book, sort: 'zipcode' } );
+	setTimeout(function(){ location.reload(true); }, 150);
+}
 function openCreate(){
 	var book = location.search.split('book=')[1];
 	location.href = ('createEntry?book='+book);

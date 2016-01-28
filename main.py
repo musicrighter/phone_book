@@ -21,10 +21,7 @@ from flask import url_for
 import json
 import logging
 
-# Date handling 
-import arrow # Replacement for datetime, based on moment.js
-import datetime # But we may still need time
-from dateutil import tz  # For interpreting local times
+import re
 
 # Mongo database
 from pymongo import MongoClient
@@ -35,6 +32,8 @@ from bson import ObjectId
 # Globals
 ###
 import CONFIG
+
+sort = 'name'
 
 app = flask.Flask(__name__)
 
@@ -61,12 +60,23 @@ def index():
 @app.route("/openBook")
 def openBook():
     book_name = request.args.get('book', 0, type=str)
+    sort1 = request.args.get('sort', 0, type=str)
+    if (sort1 != 0):
+        global sort
+        sort = sort1
     flask.session['contacts'] = get_contacts(book_name)
     return flask.render_template('book.html')
 
 @app.route("/createEntry")
 def createEntry():
     return flask.render_template('create.html')
+
+@app.route("/renameBook")
+def renameBook():
+    book_name = request.args.get('book_name', 0, type=str)
+    newName = request.args.get('newName', 0, type=str)
+    db[book_name].renameCollection('newname')
+    return flask.render_template('index.html')
 
 @app.route("/_add_book")
 def add_book():
@@ -90,7 +100,6 @@ def add_contact():
     put_entry(book_name, first_name, last_name, phone, email, street_address1, street_address2, city, state, zipcode, extension)
     return flask.redirect(url_for('index'))
 
-
 @app.route("/_del_entry")
 def del_entry():
     book = request.args.get('_id', 0, type=str)
@@ -105,6 +114,49 @@ def del_contact():
     db[book].remove({'_id': ObjectId(contact_id)})
     return flask.render_template('book.html')
 
+@app.route("/exportBook")
+def exportBook():
+    book_name = request.args.get('book_name', 0, type=str)
+    file_name = request.args.get('file', 0, type=str)
+  
+    content = []
+
+
+    file1 = open(file_name, 'w')
+    contents = get_contacts(book_name)
+
+    for x in contents:
+        if x['city'] == "" or x['city'] == " ":
+            x['city'] = "CITY"
+
+        if x['state'] == "" or x['state'] == " ":
+            x['state'] = "STATE"
+
+        if x['zipcode'] == "" or x['zipcode'] == " ":
+            x['zipcode'] = "ZIPCODE"
+
+        if x['street_address1'] == "" or x['street_address1'] == " ":
+            x['street_address1'] = "Delivery"
+
+        if x['street_address2'] == "" or x['street_address2'] == " ":
+            x['street_address2'] = "Second"
+
+        if x['last_name'] == "" or x['last_name'] == " ":
+            x['last_name'] = "LastName"
+
+        if x['first_name'] == "" or x['first_name'] == " ":
+            x['first_name'] = "FirstName"
+
+        if x['phone'] == "" or x['phone'] == " ":
+            x['phone'] = "Phone"
+    
+        content.append(x['city'] + " <tab> " + x['state'] + " <tab> " + x['zipcode'] + " <tab> " + x['street_address1'] + " <tab> " + x['street_address2'] + " <tab> " + x['last_name'] + " <tab> " + x['first_name'] + " <tab> " + x['phone'] + '\n')
+ 
+    for c in content:
+        file1.write(c)
+
+    return flask.render_template('index.html')
+
 @app.errorhandler(404)
 def page_not_found(error):
     app.logger.debug("Page not found")
@@ -117,16 +169,22 @@ def page_not_found(error):
 # Functions available to the page code above
 #
 ##############
+
 def get_contacts(book_name):
     """
     Returns all memos in the database, in a form that
     can be inserted directly in the 'session' object.
     """
     records = [ ]
-    for record in db[book_name].find( { "type": "contact" } ):
-    	record["_id"] = str(record["_id"])
-	records.append(record)
-        #records.append(record['first_name'] + " " + record['last_name'])
+    global sort
+    if sort == "zipcode":
+        for record in sorted(db[book_name].find( { "type": "contact" } ), key=lambda name: name["zipcode"]):
+            record["_id"] = str(record["_id"])
+            records.append(record)
+    else:
+        for record in sorted(db[book_name].find( { "type": "contact" } ), key=lambda name: (name["first_name"].lower(), name["last_name"].lower())):
+            record["_id"] = str(record["_id"])
+            records.append(record)
     return records 
 
 def get_books():
@@ -174,5 +232,4 @@ if __name__ == "__main__":
     else:
         # Reachable from anywhere 
         app.run(port=CONFIG.PORT,host="0.0.0.0")
-
-    
+           

@@ -54,9 +54,10 @@
 				<div class="panel panel-primary">
 					<div class="panel-body clearfix"> 
 						{{ book }}
+						<button type="button" class="btn btn-default pull-right" onclick="exportBook('{{book}}')">Export</button>
 						<button type="button" class="btn btn-default pull-right" onclick="deleteConf('{{book}}')">Delete</button>
 						<button type="button" class="btn btn-default pull-right" onclick="jopenbook('{{book}}')">Open</button>
-						<button type="button" class="btn btn-default pull-right">Rename</button>
+						<button type="button" class="btn btn-default pull-right" onclick="renameBook('{{book}}')">Rename</button>
 					</div>
 				</div>
 			</div>  
@@ -138,8 +139,22 @@ function createbook() {
 	setTimeout(function(){ location.reload(true); }, 150);
 }
 
+function renameBook(book) {
+	var bookName = prompt("What would you like to rename " + book + " to?", "");
+
+	// AJAX request
+	$.getJSON($SCRIPT_ROOT + '/renameBook', { book_name: book, newName: bookName } );
+	setTimeout(function(){ location.reload(true); }, 150);
+}
+
 function jopenbook(book) { 
 	window.open('openBook?book='+book);
+}
+
+function exportBook(book) { 
+    var fileName = prompt("What should the export file be named?");
+    // AJAX request
+    $.getJSON($SCRIPT_ROOT + '/exportBook', { book_name: book, file: fileName } );
 }
 
 </script>
