@@ -16,24 +16,6 @@
 
 <body id="myPage" data-spy="scroll" data-target=".navbar" data-offset="60">
 
-<div id="dialog"> 
-	<input type="text" id="input1" /> 
-	<input type="text" id="input2" /> 
-</div>
-
-
-<nav class="navbar navbar-default navbar-fixed-top">
-	<div class="container">
-		<div class="navbar-header">
-			<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
-				<span class="icon-bar"></span>
-				<span class="icon-bar"></span>
-				<span class="icon-bar"></span>                        
-			</button>
-		</div>
-	</div>
-</nav>
-
 <div class="jumbotron text-center">
 	<h1>SmartBook</h1> 
 	<p>Create a new address book</p> 
@@ -50,8 +32,8 @@
 	</div>
 	<div class="row slideanim">
 		<div class="row">
-			<div class="col-sm-8">
-				<div class="panel panel-primary">
+			<div class="col-sm-12">
+				<div class="panel banner panel-primary">
 					<div class="panel-body clearfix"> 
 						{{ book }}
 						<button type="button" class="btn btn-default pull-right" onclick="exportBook('{{book}}')">Export</button>

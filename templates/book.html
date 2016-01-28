@@ -37,10 +37,14 @@
 	<h1 id="bookName"> name</h1>
 	</div>
 
-	<div class="container-fluid center">
+	<div class="banner container-fluid center">
 		<div class="row">
-			<div class="col-md-2"> 
-				<button class="btn-lrg btn-block" onclick="openCreate()"> Add new entry </button>
+
+			<div class="col-md-3">
+				<button class="btn btn-primary btn-block" onclick="sortName()">Sort by name</button>
+			</div>
+			<div class="col-md-3">
+				<button class="btn btn-primary btn-block" onclick="sortZip()">Sort by zipcode</button>
 			</div>
 
 			<div class="col-md-4">
@@ -49,11 +53,8 @@
 				</div>
 			</div>
 
-			<div class="col-md-2">
-				<button class="btn btn-primary btn-block" onclick="sortName()">Sort by name</button>
-			</div>
-			<div class="col-md-2">
-				<button class="btn btn-primary btn-block" onclick="sortZip()">Sort by zipcode</button>
+			<div class="col-md-2"> 
+				<button class="btn btn-primary btn-block" onclick="openCreate()"> Add new entry </button>
 			</div>
 
 		</div>	
@@ -67,8 +68,8 @@
 		</div>
 		<div class="row slideanim">
 			<div class="row">
-				<div class="col-sm-8">
-					<div class="panel panel-primary">
+				<div class="col-sm-12">
+					<div class="panel banner panel-primary">
 						<div class="panel-body clearfix"> 
 							{% for field in contact %}
 								{% if contact[field] != "" and field != "_id" and field != "type" %}

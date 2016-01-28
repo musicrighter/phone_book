@@ -34,14 +34,14 @@ input[type=text]:focus, input[type=email]:focus, textarea:focus {
 				background-color: #f6f6f6;
 }
 .btn-default {
-				
 				margin: 10px;
 }
 .btn-color { 
 				background-color: #f4511e;
 				font-size: 130%;
 				color: #ffffff;
-				width: 80%;
+				padding: 5px !important;
+				width: 100%;
 				border: 2px solid #f4511e;
 				}
 .logo-small {
@@ -88,7 +88,21 @@ input[type=text]:focus, input[type=email]:focus, textarea:focus {
 				transition: box-shadow 0.5s;
 }
 
-
+.banner {
+				-webkit-align-self: center;
+				align-self: center;
+				margin: auto;
+    			width: 70%;
+}
+.center {
+			    margin: auto;
+			    width: 60%;
+			    padding: 10px;
+}
+.center1 {
+			    margin: auto;
+			    width: 100%;
+}
 .panel:hover {
 				box-shadow: 5px 0px 40px #f4511e;
 }
