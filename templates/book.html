@@ -13,7 +13,7 @@
   		<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
 	</head>
 
-	<body>
+	<body id="top" data-spy="scroll" data-target=".navbar" data-offset="60">
 
 	<nav class="navbar navbar-default navbar-fixed-top">
 	<div class="container">
@@ -49,12 +49,12 @@
 
 			<div class="col-md-4">
 				<div class="form-group">
-    				<input type="text" class="form-control" placeholder="Search">
+    				<input type="text" class="form-control" id="search" onKeydown="Javascript: if (event.keyCode==13) searchEntry()"placeholder="Search">
 				</div>
 			</div>
 
 			<div class="col-md-2"> 
-				<button class="btn btn-primary btn-block" onclick="openCreate()"> Add new entry </button>
+				<button class="btn btn-primary btn-block" onclick="openCreate()"> New entry </button>
 			</div>
 
 		</div>	
@@ -71,15 +71,18 @@
 				<div class="col-sm-12">
 					<div class="panel banner panel-primary">
 						<div class="panel-body clearfix"> 
-							{% for field in contact %}
+							{% for field in range(1) %}
 								{% if contact[field] != "" and field != "_id" and field != "type" %}
-									{{ contact[field] }}
+									{{ contact.first_name + " " + contact.last_name }} <br/>
+ +									{{ contact.phone}} <br />
+ +									{{ contact.email}} <br /> 
+ +									{{ contact.street_address1}} <br />
+ +									{{ contact.city + ", " + contact.state + " " + contact.zipcode}}
 								{% endif %}
 							{% endfor %}
-							<!-- <button type="button" class="btn btn-default pull-right" onclick="deleteCont('{{contact}}', '{{contact._id}}')">Delete</button> -->
 							<button type="button" class="btn btn-default pull-right" onclick="deleteCont('{{contact.first_name}}', '{{contact._id}}')">Delete</button>
-							<button type="button" class="btn btn-default pull-right" onclick="editCont()">Edit</button>
-							<button type="button" class="btn btn-default pull-right" onclick="viewCont()">View</button>
+							<button type="button" class="btn btn-default pull-right" onclick="editCont('{{contact._id}}')">Edit</button>
+							<!-- <button type="button" class="btn btn-default pull-right" onclick="viewCont()">View</button> -->
 						</div>
 					</div>
 				</div>  
@@ -88,16 +91,40 @@
 	</div>
 	{% endfor %}
 
-	</body>
+<footer class="container-fluid text-center">
+	<a href="#top" title="To Top">
+		<span class="glyphicon glyphicon-chevron-up"></span>
+	</a>	
+</footer>
 
 </html> 
 
 <script type="text/javascript">
 $(document).ready(function() {
-	var book = "";
 	var urlVar = location.search.split('book=')[1];
-	book = decodeURIComponent(urlVar);
+	var book = decodeURIComponent(urlVar);
 	document.getElementById("bookName").innerHTML = book;
+
+	// Add smooth scrolling to all links in navbar + footer link
+	$(".navbar a, footer a[href='#top']").on('click', function(event) {
+
+		// Prevent default anchor click behavior
+		event.preventDefault();
+
+		// Store hash
+		var hash = this.hash;
+
+
+		// Using jQuery's animate() method to add smooth page scroll
+		// The optional number (900) specifies the number of milliseconds it takes to scroll to the specified area
+		$('html, body').animate({
+			scrollTop: $(hash).offset().top
+		}, 900, function(){
+
+		// Add hash (#) to URL when done scrolling (default click behavior)
+		window.location.hash = hash;
+		});
+	});
 })
 
 $('#about').click(function () {
@@ -112,35 +139,44 @@ $('#my_books').click(function () {
 	}
 });
 
+$SCRIPT_ROOT = {{request.script_root|tojson|safe}};
+
+function searchEntry() {
+    var search = document.getElementById("search").value;
+    var urlVar = location.search.split('book=')[1];
+    var book = decodeURIComponent(urlVar);
+    $.getJSON($SCRIPT_ROOT + '/searchFun', { book_name: book, searchType: search } );
+    setTimeout(function(){ location.reload(true); }, 150);
+}
 function sortName() {
-	var book = location.search.split('book=')[1];
+	var urlVar = location.search.split('book=')[1];
+    var book = decodeURIComponent(urlVar);
 	$.getJSON($SCRIPT_ROOT + '/openBook', { book: book, sort: 'name' } );
 	setTimeout(function(){ location.reload(true); }, 150);
 }
 function sortZip() {
-	var book = location.search.split('book=')[1];
+	var urlVar = location.search.split('book=')[1];
+    var book = decodeURIComponent(urlVar);
 	$.getJSON($SCRIPT_ROOT + '/openBook', { book: book, sort: 'zipcode' } );
 	setTimeout(function(){ location.reload(true); }, 150);
 }
 function openCreate(){
-	var book = location.search.split('book=')[1];
-	location.href = ('createEntry?book='+book);
-}
-function editCont(){
-	var book = location.search.split('book=')[1];
-	location.href = ('createEntry?book='+book);
-}
-function viewCont(){
-	var book = location.search.split('book=')[1];
-	location.href = ('createEntry?book='+book);
-}
-
-$SCRIPT_ROOT = {{request.script_root|tojson|safe}};
-
-function deleteCont(contact, id){
-	var book = "";
 	var urlVar = location.search.split('book=')[1];
-	book = decodeURIComponent(urlVar);
+    var book = decodeURIComponent(urlVar);
+	location.href = ('createEntry?book='+book);
+}
+function editCont(contactID){
+	var book = location.search.split('book=')[1];
+	location.href = ('editEntry?book='+book+'&id='+contactID);
+}
+/*function viewCont(){
+	var urlVar = location.search.split('book=')[1];
+    var book = decodeURIComponent(urlVar);
+	location.href = ('createEntry?book='+book);
+}*/
+function deleteCont(contact, id){
+	var urlVar = location.search.split('book=')[1];
+	var book = decodeURIComponent(urlVar);
 
 	var delConf = confirm("Are you sure you want to delete " + contact + "?");
 	if (delConf) {

@@ -1,5 +1,4 @@
-
-<!DOCTYPE html>
+<!DOCTYPE html PUBLIC "-//IETF//DTD HTML//EN">
 <html lang="en">
 <head>
 <title>Address book</title>
@@ -14,15 +13,20 @@
 </head>
 
 
-<body id="myPage" data-spy="scroll" data-target=".navbar" data-offset="60">
+<body id="top" data-spy="scroll" data-target=".navbar" data-offset="60">
 
 <div class="jumbotron text-center">
 	<h1>SmartBook</h1> 
 	<p>Create a new address book</p> 
 	<form class="form-inline">
-		<input type="text" class="form-control" size="50" onKeydown="Javascript: if (event.keyCode==13) createbook()" id="createText" placeholder="Name of Address Book" required>
-		<button type="button" class="btn btn-danger" id="createButton" onclick="createbook()">Create</button>
+		<input type="text" class="form-control" size="50" onKeydown="Javascript: if (event.keyCode==13) createBook()" id="createText" placeholder="Name of Address Book" required>
+		<button type="button" class="btn btn-danger" id="createButton" onclick="createBook()">Create</button>
 	</form>
+	<div class="form-inline">
+		<input class="form-control btn" id="myFile" type="file"/>
+		<button type="button" class="btn btn-danger" id="importButton" onclick="importBook()">Import</button>
+	</div>
+
 </div>
 {% for book in session.books %}
 
@@ -38,7 +42,7 @@
 						{{ book }}
 						<button type="button" class="btn btn-default pull-right" onclick="exportBook('{{book}}')">Export</button>
 						<button type="button" class="btn btn-default pull-right" onclick="deleteConf('{{book}}')">Delete</button>
-						<button type="button" class="btn btn-default pull-right" onclick="jopenbook('{{book}}')">Open</button>
+						<button type="button" class="btn btn-default pull-right" onclick="openBook('{{book}}')">Open</button>
 						<button type="button" class="btn btn-default pull-right" onclick="renameBook('{{book}}')">Rename</button>
 					</div>
 				</div>
@@ -51,26 +55,31 @@
 {% endfor %}
 
 <footer class="container-fluid text-center">
-	<a href="#myPage" title="To Top">
+	<a href="#top" title="To Top">
 		<span class="glyphicon glyphicon-chevron-up"></span>
 	</a>	
 </footer>
 
-<script>
-
-
+<script type="text/javascript">
+$SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
 
 $(document).ready(function(){
-
-	//var UserName = prompt("Please enter your username", "");
-	//var Passkey = prompt("Please enter your password", "");
-
-	UserName = JSON.stringify({ 'User': UserName});
-	Passkey = JSON.stringify({'password': Passkey});
-
+	/*var UserName = prompt("Please enter your username", "");
+ 	var Passkey = prompt("Please enter your password", "");
+ 
+	//user login ajax call for verification
+	$.ajax({ url: $SCRIPT_ROOT + '/_userLogin',
+		data: {user: UserName, pwd: Passkey },
+		success: function(data) {
+			if (data.result == "0") {
+				alert("Invalid username!");
+				location.reload(true); 
+			}
+		}
+	});*/
 
 	// Add smooth scrolling to all links in navbar + footer link
-	$(".navbar a, footer a[href='#myPage']").on('click', function(event) {
+	$(".navbar a, footer a[href='#top']").on('click', function(event) {
 
 		// Prevent default anchor click behavior
 		event.preventDefault();
@@ -103,17 +112,15 @@ $(document).ready(function(){
 	});
 })
 
-$SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
 function deleteConf(book) {
 	var delConf = confirm("Are you sure you want to delete " + book + "?");
 	if (delConf) {
 		$.getJSON($SCRIPT_ROOT + '/_del_entry', { _id: book } );
 		setTimeout(function(){ location.reload(true); }, 150);
-		
 	}
 
 }
-function createbook() {
+function createBook() {
 	var bookName = document.getElementById("createText").value;
 
 	// AJAX request
@@ -129,14 +136,37 @@ function renameBook(book) {
 	setTimeout(function(){ location.reload(true); }, 150);
 }
 
-function jopenbook(book) { 
+function openBook(book) { 
 	window.open('openBook?book='+book);
+}
+
+function importBook() { 
+	var file = document.getElementById("myFile").files[0];
+	$.getJSON($SCRIPT_ROOT + '/_add_book', { book_name: file.name } );
+	/*$.getJSON($SCRIPT_ROOT + '/importBook', { book_name: file.name, fileObj: file } );*/
+	setTimeout(function(){ location.reload(true); }, 150);
 }
 
 function exportBook(book) { 
     var fileName = prompt("What should the export file be named?");
-    // AJAX request
-    $.getJSON($SCRIPT_ROOT + '/exportBook', { book_name: book, file: fileName } );
+
+    $.getJSON($SCRIPT_ROOT + '/exportBook', 
+		// The object to pass to the server
+		{ book_name: book },
+		// The function to call with the response
+		function(data) {
+			var element = document.createElement('a');
+			element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(data.file));
+			element.setAttribute('download', fileName+".tsv");
+
+			element.style.display = 'none';
+			document.body.appendChild(element);
+
+			element.click();
+
+			document.body.removeChild(element);
+		})
+	; // End of the call to getJSON
 }
 
 </script>

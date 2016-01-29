@@ -17,15 +17,13 @@ import flask
 from flask import render_template
 from flask import request
 from flask import url_for
+from flask import jsonify # For AJAX transactions
 
 import json
 import logging
 
-import re
-
 # Mongo database
 from pymongo import MongoClient
-
 from bson import ObjectId
 
 ###
@@ -34,6 +32,7 @@ from bson import ObjectId
 import CONFIG
 
 sort = 'name'
+searchText = 'NULL'
 
 app = flask.Flask(__name__)
 
@@ -64,6 +63,8 @@ def openBook():
     if (sort1 != 0):
         global sort
         sort = sort1
+        global searchText
+        searchText = 'NULL'
     flask.session['contacts'] = get_contacts(book_name)
     return flask.render_template('book.html')
 
@@ -71,11 +72,26 @@ def openBook():
 def createEntry():
     return flask.render_template('create.html')
 
+@app.route("/editEntry")
+def editEntry():
+   return flask.render_template('edit.html')
+
+@app.route("/_userLogin")
+def userLogin():
+    userName = request.args.get('user', 0, type=str)
+    passWord = request.args.get('pwd', 0, type=str)
+
+    result = 0
+    if (userName == "stuart" and passWord == "faulk"):
+        result = 1
+
+    return jsonify(result=str(result), confirm = "confirm")
+
 @app.route("/renameBook")
 def renameBook():
     book_name = request.args.get('book_name', 0, type=str)
     newName = request.args.get('newName', 0, type=str)
-    db[book_name].renameCollection('newname')
+    db[book_name].rename(newName)
     return flask.render_template('index.html')
 
 @app.route("/_add_book")
@@ -110,19 +126,39 @@ def del_entry():
 def del_contact():
     contact_id = request.args.get('_id', 0, type=str)
     book = request.args.get('book_name', 0, type=str)
-    print(db[book])
     db[book].remove({'_id': ObjectId(contact_id)})
     return flask.render_template('book.html')
+
+@app.route("/searchFun")
+def searchFun():
+    book_name = request.args.get('book_name', 0, type=str)
+    search1 = request.args.get('searchType', 0, type=str)
+    if (search1 != 0):
+        global searchText
+        searchText = search1
+    flask.session['contacts'] = get_contacts(book_name);
+    return flask.render_template('book.html')
+
+@app.route("/importBook")
+def importBook():
+    book = request.args.get('book_name', 0, type=str)
+    filename = request.args.get('fileObj', 0, type=str)
+
+    print(book)
+    print(filename)
+
+    # file1 = open(filename, 'w')
+
+    # for contact in file1:
+
+
+    return flask.redirect(url_for('index'))
 
 @app.route("/exportBook")
 def exportBook():
     book_name = request.args.get('book_name', 0, type=str)
-    file_name = request.args.get('file', 0, type=str)
   
     content = []
-
-
-    file1 = open(file_name, 'w')
     contents = get_contacts(book_name)
 
     for x in contents:
@@ -151,11 +187,13 @@ def exportBook():
             x['phone'] = "Phone"
     
         content.append(x['city'] + " <tab> " + x['state'] + " <tab> " + x['zipcode'] + " <tab> " + x['street_address1'] + " <tab> " + x['street_address2'] + " <tab> " + x['last_name'] + " <tab> " + x['first_name'] + " <tab> " + x['phone'] + '\n')
- 
-    for c in content:
-        file1.write(c)
 
-    return flask.render_template('index.html')
+    filetext = ""
+    for thing in content:
+        thing = thing.replace(',', '')
+        filetext = filetext+thing
+
+    return jsonify(file=filetext, confirm="true")
 
 @app.errorhandler(404)
 def page_not_found(error):
@@ -175,6 +213,18 @@ def get_contacts(book_name):
     Returns all memos in the database, in a form that
     can be inserted directly in the 'session' object.
     """
+    global searchText
+    searched = []
+    if searchText != 'NULL':
+        for record in db[book_name].find( { "type" : "contact" } ):
+            found = 0
+            for field in record:
+                if (searchText.lower() in str(record[field]).lower() and found == 0 and field != "_id" and field != "type"):
+                    record["_id"] = str(record["_id"])
+                    searched.append(record)
+                    found = 1
+        return searched
+
     records = [ ]
     global sort
     if sort == "zipcode":

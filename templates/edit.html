@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>SmartBook</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link href="../static/bootstrap-3.3.6-dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="http://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=Lato" rel="stylesheet" type="text/css">
+<link href="../static/pagestyle.css" rel="stylesheet">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+
+</head>
+<body id="myPage" data-spy="scroll" data-target=".navbar" data-offset="60">
+
+<div class="jumbotron text-center">
+	<h1 id="bookName">Address Book 1</h1> 
+	<p>You can edit your entry</p> 
+</div>
+
+<div class="center">
+	<div class="col-sm-6">
+		<div class="panel panel-success">
+			<input type="text" class="form-control" id="FirstName" placeholder="First name" maxlength="50" />
+		</div>
+	</div>  
+	<div class="col-sm-6">  
+		<div class="panel panel-success">
+			<input type="text" class="form-control" id="LastName" placeholder="Last name" maxlength="50" />
+		</div>    
+	</div>
+	<div class="col-sm-12">  
+		<div class="panel panel-success">
+			<input type="text" class="form-control" id="PHONENUMBER" placeholder="Number" maxlength="11" />
+		</div>    
+	</div>
+	<div class="col-sm-12">  
+		<div class="panel panel-success">
+			<input type="email" class="form-control" id="EMAIL" placeholder="Email" maxlength="100" />
+		</div>    
+	</div>
+	<div class="col-sm-12">  
+		<div class="panel panel-success">
+			<input type="text" class="form-control" id="ADDRESS1" placeholder="Street address 1" maxlength="100" />
+		</div>    
+	</div>
+	<div class="col-sm-12">  
+		<div class="panel panel-success">
+			<input type="text" class="form-control" id="ADDRESS2" placeholder="Street address 2" maxlength="100" />
+		</div>    
+	</div>
+	
+	<div class="col-sm-6">  
+		<div class="panel panel-success">
+			<input type="text" class="form-control" id="CITY" placeholder="City" maxlength="20"/>
+		</div>    
+	</div>
+	<div class="col-sm-2">  
+		<div class="panel panel-success">
+			<input type="text" class="form-control" id="STATE" placeholder="State" maxlength="20" />
+		</div>    
+	</div>
+	<div class="col-sm-2">  
+		<div class="panel panel-success">
+			<input type="text" class="form-control" id="ZIPCODE" placeholder="Zipcode" maxlength="5" />
+		</div>    
+	</div>
+	<div class="col-sm-2">  
+		<div class="panel panel-success">
+			<input type="text" class="form-control" id="EXTENSION" placeholder="Ext" maxlength="4"/>
+		</div>    
+	</div>
+
+	<div class="center1">
+		<div class="col-md-6">
+			<button class="btn btn-color" type="button" onclick="addContact()"> Save </button>
+		</div>
+		<div class="col-md-6">
+			<button class="btn btn-color" type="button" onclick="cancel()"> Cancel </button>
+		</div>
+	</div>
+</div>
+
+
+<script type="text/javascript">
+$(document).ready(function(){
+		var book = "";
+		var urlVar = location.search.split('book=')[1];
+		book = decodeURIComponent(urlVar);
+		
+		document.getElementById("bookName").innerHTML = book;
+		var id = "";
+		var urlVar2 = location.search.split('&id=')[1];
+		id = decodeURIComponent(urlVar2);
+		{% for contact in session.contacts %}
+			var current_id = '{{contact._id}}'; 
+			if (current_id == id) {
+				var current_name = '{{contact.first_name}}';
+				var current_last = '{{contact.last_name}}';
+				var current_phone = '{{contact.phone}}';
+				var current_email = '{{contact.email}}';
+				var current_street1 = '{{contact.street_address1}}';
+				var current_street2 = '{{contact.street_address2}}';
+				var current_city = '{{contact.city}}'
+				var current_state = '{{contact.state}}';
+				var current_zip = '{{contact.zipcode}}';
+				var current_ext = '{{contact.extension}}';
+			}
+			document.getElementById("FirstName").placeholder= current_name;
+			document.getElementById("LastName").placeholder = current_last;
+			document.getElementById("PHONENUMBER").placeholder = current_phone;
+			document.getElementById("EMAIL").placeholder = current_email;
+			document.getElementById("ADDRESS1").placeholder = current_street1;
+			document.getElementById("ADDRESS2").placeholder = current_street2;
+			document.getElementById("CITY").placeholder = current_city;
+			document.getElementById("STATE").placeholder = current_state;
+			document.getElementById("ZIPCODE").placeholder = current_zip;
+			document.getElementById("EXTENSION").placeholder = current_ext;
+		{% endfor %}
+// Slide in elements on scroll
+$(window).scroll(function() {
+	$(".slideanim").each(function(){
+		var pos = $(this).offset().top;
+		var winTop = $(window).scrollTop();
+		if (pos < winTop + 600) {
+		$(this).addClass("slide");
+		}
+		});
+	});
+})
+function cancel() {
+	var book = location.search.split('book=')[1];
+	location.href = ('openBook?book='+book);
+}
+$SCRIPT_ROOT = {{request.script_root|tojson|safe}};
+function addContact() {
+	var book = "";
+	var urlVar = location.search.split('book=')[1];
+	book = decodeURIComponent(urlVar);
+	var FirstName = document.getElementById("FirstName").value;
+	var LastName = document.getElementById("LastName").value;
+	var PHONENUMBER = document.getElementById("PHONENUMBER").value;
+	var EMAIL = document.getElementById("EMAIL").value;
+	var ADDRESS1 = document.getElementById("ADDRESS1").value;
+	var ADDRESS2 = document.getElementById("ADDRESS2").value;
+	var CITY = document.getElementById("CITY").value;
+	var STATE = document.getElementById("STATE").value;
+	var ZIPCODE = document.getElementById("ZIPCODE").value;
+	var EXTENSION = document.getElementById("EXTENSION").value;
+	// AJAX request
+	$.getJSON($SCRIPT_ROOT + '/_add_contact', { book: book,
+												first_name: FirstName, 
+												last_name: LastName,
+												phone:PHONENUMBER,
+												email:EMAIL,
+												street_address1:ADDRESS1,
+												street_address2:ADDRESS2,
+												city:CITY,
+												state:STATE,
+												zipcode:ZIPCODE,
+												extension:EXTENSION } 
+	);
+	setTimeout( function() {location.href = ('openBook?book='+book);}, 150);
+}
+</script>
+
+</body>
+</html>
