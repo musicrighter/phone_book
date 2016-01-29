@@ -85,14 +85,20 @@
 
 <script type="text/javascript">
 $(document).ready(function(){
+		var query = location.search.substring(1);
+		var vars = query.split("&");
 		var book = "";
-		var urlVar = location.search.split('book=')[1];
-		book = decodeURIComponent(urlVar);
+		var id = "";
+		for (var i = 0; i < vars.length; i++) {
+			var pair = vars[i].split("=");
+			if ( pair[0] == "book" ) {
+				book = pair[1]; }
+			if ( pair[0] == "id" ) {
+				id = pair[1]; }
+		}
 		
 		document.getElementById("bookName").innerHTML = book;
-		var id = "";
-		var urlVar2 = location.search.split('&id=')[1];
-		id = decodeURIComponent(urlVar2);
+
 		{% for contact in session.contacts %}
 			var current_id = '{{contact._id}}'; 
 			if (current_id == id) {
@@ -130,26 +136,91 @@ $(window).scroll(function() {
 	});
 })
 function cancel() {
-	var book = location.search.split('book=')[1];
+	var query = location.search.substring(1);
+	var vars = query.split("&");
+	var book = "";
+	for (var i = 0; i < vars.length; i++) {
+			var pair = vars[i].split("=");
+			if ( pair[0] == "book" ) {
+				book = pair[1]; }
+	}
+
 	location.href = ('openBook?book='+book);
 }
 $SCRIPT_ROOT = {{request.script_root|tojson|safe}};
 function addContact() {
+	var query = location.search.substring(1);
+	var vars = query.split("&");
 	var book = "";
-	var urlVar = location.search.split('book=')[1];
-	book = decodeURIComponent(urlVar);
+	for (var i = 0; i < vars.length; i++) {
+			var pair = vars[i].split("=");
+			if ( pair[0] == "book" ) {
+				book = pair[1]; }
+	}
+	
+	if (document.getElementById("FirstName").value == ' ' ||
+	    document.getElementById("FirstName").value == '') 
+	    var FirstName = document.getElementById("FirstName").placeholder;
+	else
 	var FirstName = document.getElementById("FirstName").value;
+
+
+	if (document.getElementById("LastName").value == ' ' ||
+	    document.getElementById("LastName").value == '') 
+	    var LastName = document.getElementById("LastName").placeholder;
+	else
 	var LastName = document.getElementById("LastName").value;
+
+	if (document.getElementById("PHONENUMBER").value == ' ' ||
+	    document.getElementById("PHONENUMBER").value == '') 
+	    var PHONENUMBER = document.getElementById("PHONENUMBER").placeholder;
+	else
 	var PHONENUMBER = document.getElementById("PHONENUMBER").value;
+
+	if (document.getElementById("EMAIL").value == ' ' ||
+	    document.getElementById("EMAIL").value == '') 
+	    var EMAIL = document.getElementById("EMAIL").placeholder;
+	else
 	var EMAIL = document.getElementById("EMAIL").value;
+
+	if (document.getElementById("ADDRESS1").value == ' ' ||
+	    document.getElementById("ADDRESS1").value == '') 
+	    var ADDRESS1 = document.getElementById("ADDRESS1").placeholder;
+	else
 	var ADDRESS1 = document.getElementById("ADDRESS1").value;
+
+	if (document.getElementById("ADDRESS2").value == ' ' ||
+	    document.getElementById("ADDRESS2").value == '') 
+	    var ADDRESS2 = document.getElementById("ADDRESS2").placeholder;
+	else
 	var ADDRESS2 = document.getElementById("ADDRESS2").value;
+
+	if (document.getElementById("CITY").value == ' ' ||
+	    document.getElementById("CITY").value == '') 
+	    var CITY = document.getElementById("CITY").placeholder;
+	else
 	var CITY = document.getElementById("CITY").value;
+
+	if (document.getElementById("STATE").value == ' ' ||
+	    document.getElementById("STATE").value == '') 
+	    var STATE = document.getElementById("STATE").placeholder;
+	else
 	var STATE = document.getElementById("STATE").value;
+
+	if (document.getElementById("ZIPCODE").value == ' ' ||
+	    document.getElementById("ZIPCODE").value == '') 
+	    var ZIPCODE = document.getElementById("ZIPCODE").placeholder;
+	else
 	var ZIPCODE = document.getElementById("ZIPCODE").value;
+
+	if (document.getElementById("EXTENSION").value == ' ' ||
+	    document.getElementById("EXTENSION").value == '') 
+	    var EXTENSION = document.getElementById("EXTENSION").placeholder;
+	else
 	var EXTENSION = document.getElementById("EXTENSION").value;
+
 	// AJAX request
-	$.getJSON($SCRIPT_ROOT + '/_add_contact', { book: book,
+	$.getJSON($SCRIPT_ROOT + '/_add_contact', { book_name: book,
 												first_name: FirstName, 
 												last_name: LastName,
 												phone:PHONENUMBER,
@@ -161,7 +232,24 @@ function addContact() {
 												zipcode:ZIPCODE,
 												extension:EXTENSION } 
 	);
+
+	deleteCont(book);
 	setTimeout( function() {location.href = ('openBook?book='+book);}, 150);
+}
+
+function deleteCont(book){
+	var query = location.search.substring(1);
+	var vars = query.split("&");
+	var id = "";
+	for (var i = 0; i < vars.length; i++) {
+			var pair = vars[i].split("=");
+			if ( pair[0] == "id" ) {
+				id = pair[1]; }
+	}
+	alert(book);
+	alert(id);
+		$.getJSON($SCRIPT_ROOT + '/_del_contact', { _id: id, book_name: book } );
+	
 }
 </script>
 
