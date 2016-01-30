@@ -102,7 +102,7 @@ def add_book():
 
 @app.route("/_add_contact")
 def add_contact():
-    book_name = request.args.get('book', 0, type=str)
+    book_name = request.args.get('book_name', 0, type=str)
     first_name = request.args.get('first_name', 0, type=str)
     last_name = request.args.get('last_name', 0, type=str)
     phone = request.args.get('phone', 0, type=str)
