@@ -85,11 +85,16 @@
 
 <script type="text/javascript">
 $(document).ready(function(){
-		var book = "";
-		var urlVar = location.search.split('book=')[1];
-		book = decodeURIComponent(urlVar);
-		document.getElementById("bookName").innerHTML = book;
+	var query = location.search.substring(1);
+	var vars = query.split("&");
+	var book = "";
+	for (var i = 0; i < vars.length; i++) {
+			var pair = vars[i].split("=");
+			if ( pair[0] == "book" ) {
+				book = pair[1]; }
+	}
 
+	document.getElementById("bookName").innerHTML = book;
 
 // Slide in elements on scroll
 $(window).scroll(function() {
@@ -110,9 +115,14 @@ function cancel() {
 
 $SCRIPT_ROOT = {{request.script_root|tojson|safe}};
 function addContact() {
+	var query = location.search.substring(1);
+	var vars = query.split("&");
 	var book = "";
-	var urlVar = location.search.split('book=')[1];
-	book = decodeURIComponent(urlVar);
+	for (var i = 0; i < vars.length; i++) {
+			var pair = vars[i].split("=");
+			if ( pair[0] == "book" ) {
+				book = pair[1]; }
+	}
 
 	var FirstName = document.getElementById("FirstName").value;
 	var LastName = document.getElementById("LastName").value;
@@ -125,7 +135,7 @@ function addContact() {
 	var ZIPCODE = document.getElementById("ZIPCODE").value;
 	var EXTENSION = document.getElementById("EXTENSION").value;
 	// AJAX request
-	$.getJSON($SCRIPT_ROOT + '/_add_contact', { book: book,
+	$.getJSON($SCRIPT_ROOT + '/_add_contact', { book_name: book,
 												first_name: FirstName, 
 												last_name: LastName,
 												phone:PHONENUMBER,
