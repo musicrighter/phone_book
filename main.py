@@ -33,6 +33,7 @@ import CONFIG
 
 sort = 'name'
 searchText = 'NULL'
+loginCheck = True
 
 app = flask.Flask(__name__)
 
@@ -56,6 +57,23 @@ def index():
     flask.session['books'] = get_books()
     return flask.render_template('index.html')
 
+@app.route("/login")
+def login():
+    global loginCheck
+    loginCheck = False
+    return flask.render_template('login.html')
+
+@app.route("/check")
+def check():
+    global loginCheck
+    return jsonify(check=str(loginCheck), confirm="true")
+
+@app.route("/logout")
+def logout():
+    global loginCheck
+    loginCheck = True
+    return flask.render_template('index.html')
+
 @app.route("/openBook")
 def openBook():
     book_name = request.args.get('book', 0, type=str)
@@ -75,17 +93,6 @@ def createEntry():
 @app.route("/editEntry")
 def editEntry():
    return flask.render_template('edit.html')
-
-@app.route("/_userLogin")
-def userLogin():
-    userName = request.args.get('user', 0, type=str)
-    passWord = request.args.get('pwd', 0, type=str)
-
-    result = 0
-    if (userName == "stuart" and passWord == "faulk"):
-        result = 1
-
-    return jsonify(result=str(result), confirm = "confirm")
 
 @app.route("/renameBook")
 def renameBook():
@@ -186,7 +193,7 @@ def exportBook():
         if x['phone'] == "" or x['phone'] == " ":
             x['phone'] = "Phone"
     
-        content.append(x['city'] + " <tab> " + x['state'] + " <tab> " + x['zipcode'] + " <tab> " + x['street_address1'] + " <tab> " + x['street_address2'] + " <tab> " + x['last_name'] + " <tab> " + x['first_name'] + " <tab> " + x['phone'] + '\n')
+        content.append(x['city'] + "\t" + x['state'] + "\t" + x['zipcode'] + "\t" + x['street_address1'] + "\t" + x['street_address2'] + "\t" + x['last_name'] + "\t" + x['first_name'] + "\t" + x['phone'] + '\n')
 
     filetext = ""
     for thing in content:

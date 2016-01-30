@@ -92,9 +92,9 @@ $(document).ready(function(){
 		for (var i = 0; i < vars.length; i++) {
 			var pair = vars[i].split("=");
 			if ( pair[0] == "book" ) {
-				book = pair[1]; }
+				book = decodeURIComponent(pair[1]); }
 			if ( pair[0] == "id" ) {
-				id = pair[1]; }
+				id = decodeURIComponent(pair[1]); }
 		}
 		
 		document.getElementById("bookName").innerHTML = book;
@@ -102,16 +102,26 @@ $(document).ready(function(){
 		{% for contact in session.contacts %}
 			var current_id = '{{contact._id}}'; 
 			if (current_id == id) {
-				var current_name = '{{contact.first_name}}';
-				var current_last = '{{contact.last_name}}';
-				var current_phone = '{{contact.phone}}';
-				var current_email = '{{contact.email}}';
-				var current_street1 = '{{contact.street_address1}}';
-				var current_street2 = '{{contact.street_address2}}';
-				var current_city = '{{contact.city}}'
-				var current_state = '{{contact.state}}';
-				var current_zip = '{{contact.zipcode}}';
-				var current_ext = '{{contact.extension}}';
+				if ('{{contact.first_name}}' != "") { var current_name = '{{contact.first_name}}'; }
+				else { var current_name = 'First name';}
+				if ('{{contact.last_name}}' != "") { var current_last = '{{contact.last_name}}'; }
+				else { var current_last = 'Last name';}
+				if ('{{contact.phone}}' != "") { var current_phone = '{{contact.phone}}'; }
+				else { var current_phone = 'Phone number';}
+				if ('{{contact.email}}' != "") { var current_email = '{{contact.email}}'; }
+				else { var current_email = 'Email';}
+				if ('{{contact.street_address1}}' != "") { var current_street1 = '{{contact.street_address1}}'; }
+				else { var current_street1 = 'Street address 1';}
+				if ('{{contact.street_address2}}' != "") { var current_street2 = '{{contact.street_address2}}'; }
+				else { var current_street2 = 'Stret address 2';}
+				if ('{{contact.city}}' != "") { var current_city = '{{contact.city}}' }
+				else { var current_city = 'City';}
+				if ('{{contact.state}}' != "") { var current_state = '{{contact.state}}'; }
+				else { var current_state = 'State';}
+				if ('{{contact.zipcode}}' != "") { var current_zip = '{{contact.zipcode}}'; }
+				else { var current_zip = 'Zipcode';}
+				if ('{{contact.extension}}' != "") { var current_ext = '{{contact.extension}}'; }
+				else { var current_ext = 'Extension'; }
 			}
 			document.getElementById("FirstName").placeholder= current_name;
 			document.getElementById("LastName").placeholder = current_last;
@@ -140,9 +150,10 @@ function cancel() {
 	var vars = query.split("&");
 	var book = "";
 	for (var i = 0; i < vars.length; i++) {
-			var pair = vars[i].split("=");
-			if ( pair[0] == "book" ) {
-				book = pair[1]; }
+		var pair = vars[i].split("=");
+		if ( pair[0] == "book" ) {
+			book = decodeURIComponent(pair[1]); 
+		}
 	}
 
 	location.href = ('openBook?book='+book);
@@ -153,9 +164,10 @@ function addContact() {
 	var vars = query.split("&");
 	var book = "";
 	for (var i = 0; i < vars.length; i++) {
-			var pair = vars[i].split("=");
-			if ( pair[0] == "book" ) {
-				book = pair[1]; }
+		var pair = vars[i].split("=");
+		if ( pair[0] == "book" ) {
+			book = decodeURIComponent(pair[1]);  
+		}
 	}
 	
 	if (document.getElementById("FirstName").value == ' ' ||
@@ -242,13 +254,12 @@ function deleteCont(book){
 	var vars = query.split("&");
 	var id = "";
 	for (var i = 0; i < vars.length; i++) {
-			var pair = vars[i].split("=");
-			if ( pair[0] == "id" ) {
-				id = pair[1]; }
+		var pair = vars[i].split("=");
+		if ( pair[0] == "id" ) {
+			id = decodeURIComponent(pair[1]); 
+		}
 	}
-	alert(book);
-	alert(id);
-		$.getJSON($SCRIPT_ROOT + '/_del_contact', { _id: id, book_name: book } );
+	$.getJSON($SCRIPT_ROOT + '/_del_contact', { _id: id, book_name: book } );
 	
 }
 </script>

@@ -89,9 +89,10 @@ $(document).ready(function(){
 	var vars = query.split("&");
 	var book = "";
 	for (var i = 0; i < vars.length; i++) {
-			var pair = vars[i].split("=");
-			if ( pair[0] == "book" ) {
-				book = pair[1]; }
+		var pair = vars[i].split("=");
+		if ( pair[0] == "book" ) {
+			book = decodeURIComponent(pair[1]);
+		}
 	}
 
 	document.getElementById("bookName").innerHTML = book;
@@ -109,7 +110,9 @@ $(window).scroll(function() {
 	});
 })
 function cancel() {
-	var book = location.search.split('book=')[1];
+	var book = "";
+	var urlVar = location.search.split('book=')[1];
+	book = decodeURIComponent(urlVar);
 	location.href = ('openBook?book='+book);
 }
 
@@ -119,9 +122,10 @@ function addContact() {
 	var vars = query.split("&");
 	var book = "";
 	for (var i = 0; i < vars.length; i++) {
-			var pair = vars[i].split("=");
-			if ( pair[0] == "book" ) {
-				book = pair[1]; }
+		var pair = vars[i].split("=");
+		if ( pair[0] == "book" ) {
+			book = decodeURIComponent(pair[1]); 
+		}
 	}
 
 	var FirstName = document.getElementById("FirstName").value;

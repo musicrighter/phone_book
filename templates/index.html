@@ -15,6 +15,23 @@
 
 <body id="top" data-spy="scroll" data-target=".navbar" data-offset="60">
 
+<nav class="navbar navbar-default navbar-fixed-top">
+	<div class="container">
+		<div class="navbar-header" height="300px">
+			<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>                        
+			</button>
+		</div>
+		<div class="collapse navbar-collapse" id="myNavbar">
+			<ul class="nav navbar-nav navbar-right">
+				<li><a id="logout" href="#logout">LOG OUT</a></li>
+			</ul>
+		</div>
+	</div>
+</nav>
+
 <div class="jumbotron text-center">
 	<h1>SmartBook</h1> 
 	<p>Create a new address book</p> 
@@ -34,7 +51,7 @@
 <div id="books" class="container-fluid">
 	<div class="text-center">
 	</div>
-	<div class="row slideanim">
+	<div class="row">
 		<div class="row">
 			<div class="col-sm-12">
 				<div class="panel banner panel-primary">
@@ -64,19 +81,11 @@
 $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
 
 $(document).ready(function(){
-	/*var UserName = prompt("Please enter your username", "");
- 	var Passkey = prompt("Please enter your password", "");
- 
-	//user login ajax call for verification
-	$.ajax({ url: $SCRIPT_ROOT + '/_userLogin',
-		data: {user: UserName, pwd: Passkey },
-		success: function(data) {
-			if (data.result == "0") {
-				alert("Invalid username!");
-				location.reload(true); 
-			}
+	$.getJSON($SCRIPT_ROOT + '/check', function(data){
+		if (data.check == "True") {
+			location.href = "login"
 		}
-	});*/
+	} );
 
 	// Add smooth scrolling to all links in navbar + footer link
 	$(".navbar a, footer a[href='#top']").on('click', function(event) {
@@ -112,13 +121,21 @@ $(document).ready(function(){
 	});
 })
 
+$('#logout').click(function () {
+	var conf = confirm("Are you sure you want to log out?");
+	if (conf) {
+		$.getJSON($SCRIPT_ROOT + '/logout');
+		window.open(location, '_self')
+		window.close();
+	}
+});
+
 function deleteConf(book) {
 	var delConf = confirm("Are you sure you want to delete " + book + "?");
 	if (delConf) {
 		$.getJSON($SCRIPT_ROOT + '/_del_entry', { _id: book } );
 		setTimeout(function(){ location.reload(true); }, 150);
 	}
-
 }
 function createBook() {
 	var bookName = document.getElementById("createText").value;

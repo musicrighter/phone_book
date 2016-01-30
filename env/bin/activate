@@ -37,7 +37,7 @@ deactivate () {
 # unset irrelavent variables
 deactivate nondestructive
 
-VIRTUAL_ENV="/home/users/djg/public_html/phone_book/env"
+VIRTUAL_ENV="/home/users/djg/public_html/p1/phone_book/env"
 export VIRTUAL_ENV
 
 _OLD_VIRTUAL_PATH="$PATH"
